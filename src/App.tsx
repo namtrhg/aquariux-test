@@ -54,7 +54,6 @@ function App() {
   const handleDelete = (time: string, country: string, city: string) => {
     const history = JSON.parse(localStorage.getItem('searchHistory') || '[]')
     const updatedHistory = history.filter((item: HistoryListItemProps) => item.time !== time)
-    console.log(time, country, city);
     localStorage.setItem('searchHistory', JSON.stringify(updatedHistory))
     setSearchHistory(updatedHistory)
   }
