@@ -17,22 +17,31 @@ export interface ResultListProps {
 
 export const HistoryList = (props: ResultListProps) => {
   const { className, searchHistory, onSearch, onDelete, isSearching } = props;
+
+  console.log(searchHistory);
+  
   return (
     <div className={className}>
       <p className="font-bold">Search History</p>
       <Divider />
-      {searchHistory.map((item, index) => (
-        <HistoryListItem
-          key={index}
-          index={index + 1}
-          city={item.city}
-          country={item.country}
-          time={item.time}
-          onSearch={() => onSearch(item.city, item.country)}
-          onDelete={() => onDelete(item.time, item.country, item.city)}
-          isSearching={isSearching}
-        />
-      ))}
+      {searchHistory.length !== 0 ?
+        <div>
+          {searchHistory.map((item, index) => (
+            <HistoryListItem
+              key={index}
+              index={index + 1}
+              city={item.city}
+              country={item.country}
+              time={item.time}
+              onSearch={() => onSearch(item.city, item.country)}
+              onDelete={() => onDelete(item.time, item.country, item.city)}
+              isSearching={isSearching}
+            />
+          ))}
+        </div>
+        :
+        <p className="text-center text-gray-400 mt-6">No record</p>
+      }
     </div>
   );
 };
