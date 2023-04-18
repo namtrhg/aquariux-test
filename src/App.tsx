@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { Divider } from "./components/Divider";
 import { FormInput } from "./components/FormInput";
 import { Result, ResultProps } from "./components/Result";
 import { HistoryList } from "./components/HistoryList";
@@ -7,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useGetTimezoneDate } from "./hooks/useGetTimezoneDate";
 import { HistoryListItemProps } from "./components/HistoryListItem";
 import axios from "axios";
+import { Divider } from "./components/Divider/Divider";
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 
