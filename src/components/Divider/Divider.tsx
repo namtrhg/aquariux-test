@@ -1,27 +1,27 @@
-import React, { HTMLAttributes } from 'react'
-import cx from 'classnames'
+import React, { HTMLAttributes } from "react";
+import cx from "classnames";
 
 interface DividerProps extends HTMLAttributes<HTMLDivElement> {
-  children?: string
-  color?: 'black' | 'gray-200'
+  children?: string;
+  color?: "black" | "gray-200";
 }
 
 export const Divider = ({
   children,
-  color = 'black',
+  color = "black",
   className,
   ...rest
 }: DividerProps) => {
   return (
     <div
-      className={cx('h-4 flex items-center justify-center relative', className)}
+      className={cx("h-4 flex items-center justify-center relative", className)}
       {...rest}
     >
       <div className="absolute inset-0 flex items-center">
         <div
-          className={cx('w-full border-t', {
-            'border-black': color === 'black',
-            'border-gray-200': color === 'gray-200',
+          className={cx("w-full border-t", {
+            "border-black": color === "black",
+            "border-gray-200": color === "gray-200",
           })}
         />
       </div>
@@ -31,5 +31,5 @@ export const Divider = ({
         </div>
       )}
     </div>
-  )
-}
+  );
+};

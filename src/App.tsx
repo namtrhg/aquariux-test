@@ -8,31 +8,43 @@ import { useGetTimezoneDate } from "./hooks/useGetTimezoneDate";
 import { HistoryListItemProps } from "./components/HistoryListItem";
 import axios from "axios";
 
-const API_KEY = process.env.REACT_APP_API_KEY
+const API_KEY = process.env.REACT_APP_API_KEY;
 
 function App() {
-  const [data, setData] = useState<ResultProps>()
-  const [searchHistory, setSearchHistory] = useState<Array<{ city: string, country: string, time: string }>>([])
-  const [error, setError] = useState(null)
+  const [data, setData] = useState<ResultProps>();
+  const [searchHistory, setSearchHistory] = useState<
+    Array<{ city: string; country: string; time: string }>
+  >([]);
+  const [error, setError] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
 
   const handleSearch = async (city: string, country: string) => {
     if (!isSearching) {
       setIsSearching(true);
       try {
-        const { data } = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_KEY}&units=metric`);
+        const { data } = await axios.get(
+          `https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_KEY}&units=metric`
+        );
         const timezoneDate = await useGetTimezoneDate(data.timezone);
-        const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+        const searchHistory = JSON.parse(
+          localStorage.getItem("searchHistory") || "[]"
+        );
         const newSearchEntry = {
           city: data.name,
           country: data.sys.country,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }),
+          time: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true,
+          }),
         };
         searchHistory.unshift(newSearchEntry);
+        //set limit for the history of 20 items
         if (searchHistory.length > 20) {
           searchHistory.pop();
         }
-        localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+        localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
         setData({
           city: data.name,
           country: data.sys.country,
@@ -41,7 +53,7 @@ function App() {
           temperatureMin: data.main.temp_min,
           temperatureMax: data.main.temp_max,
           humidity: data.main.humidity,
-          time: timezoneDate
+          time: timezoneDate,
         });
         setError(null);
       } catch (error: any) {
@@ -52,27 +64,48 @@ function App() {
   };
 
   const handleDelete = (time: string, country: string, city: string) => {
-    const history = JSON.parse(localStorage.getItem('searchHistory') || '[]')
-    const updatedHistory = history.filter((item: HistoryListItemProps) => item.time !== time)
-    localStorage.setItem('searchHistory', JSON.stringify(updatedHistory))
-    setSearchHistory(updatedHistory)
-  }
+    const history = JSON.parse(localStorage.getItem("searchHistory") || "[]");
+    const updatedHistory = history.filter(
+      (item: HistoryListItemProps) => item.time !== time
+    );
+    localStorage.setItem("searchHistory", JSON.stringify(updatedHistory));
+    setSearchHistory(updatedHistory);
+  };
 
   useEffect(() => {
-    const history = JSON.parse(localStorage.getItem('searchHistory') || '[]')
-    setSearchHistory(history)
-  }, [data])
+    const history = JSON.parse(localStorage.getItem("searchHistory") || "[]");
+    setSearchHistory(history);
+  }, [data]);
 
   return (
-    <div className="p-2 lg:p-0 lg:container lg:mx-auto">
+    <div className="p-2 mt-2 lg:p-0 lg:container lg:mx-auto">
       <p className="font-bold">Today's Weather</p>
       <Divider />
-      <FormInput handleSearch={handleSearch} isSearching={isSearching}/>
-      {data && !error &&
-        <Result className="mt-10 lg:px-10" city={data?.city} country={data?.country} status={data?.status} description={data?.description} temperatureMin={data?.temperatureMin} temperatureMax={data?.temperatureMax} humidity={data?.humidity} time={data?.time} />
-      }
-      {error && <div className="px-2 mt-4 bg-red-100 border border-red-500 rounded-sm">Not found</div>}
-      <HistoryList className="mt-10" searchHistory={searchHistory} onSearch={handleSearch} onDelete={(time, country, city) => handleDelete(time, country, city)} />
+      <FormInput handleSearch={handleSearch} isSearching={isSearching} />
+      {data && !error && (
+        <Result
+          className="mt-10 lg:px-10"
+          city={data?.city}
+          country={data?.country}
+          status={data?.status}
+          description={data?.description}
+          temperatureMin={data?.temperatureMin}
+          temperatureMax={data?.temperatureMax}
+          humidity={data?.humidity}
+          time={data?.time}
+        />
+      )}
+      {error && (
+        <div className="px-2 mt-4 bg-red-100 border border-red-500 rounded-sm">
+          Not found
+        </div>
+      )}
+      <HistoryList
+        className="mt-10"
+        searchHistory={searchHistory}
+        onSearch={handleSearch}
+        onDelete={(time, country, city) => handleDelete(time, country, city)}
+      />
     </div>
   );
 }
