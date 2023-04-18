@@ -1,4 +1,4 @@
-import { Divider } from "../Divider";
+import { Divider } from "../Divider/Divider";
 import { HistoryListItem } from "../HistoryListItem";
 
 export interface SearchHistoryItem {

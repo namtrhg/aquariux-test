@@ -1,7 +1,6 @@
 import { ReactComponent as SearchIcon } from "../../assets/svg/search.svg";
 import { ReactComponent as TrashIcon } from "../../assets/svg/trash.svg";
-import { Divider } from "../Divider";
-
+import { Divider } from "../Divider/Divider";
 export interface HistoryListItemProps {
   index: number;
   city: string;
