@@ -17,14 +17,11 @@ export interface ResultListProps {
 
 export const HistoryList = (props: ResultListProps) => {
   const { className, searchHistory, onSearch, onDelete, isSearching } = props;
-
-  console.log(searchHistory);
-  
   return (
     <div className={className}>
       <p className="font-bold">Search History</p>
       <Divider />
-      {searchHistory.length !== 0 ?
+      {searchHistory.length !== 0 ? (
         <div>
           {searchHistory.map((item, index) => (
             <HistoryListItem
@@ -39,9 +36,9 @@ export const HistoryList = (props: ResultListProps) => {
             />
           ))}
         </div>
-        :
+      ) : (
         <p className="text-center text-gray-400 mt-6">No record</p>
-      }
+      )}
     </div>
   );
 };
