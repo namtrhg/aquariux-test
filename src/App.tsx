@@ -14,41 +14,47 @@ function App() {
   const [data, setData] = useState<ResultProps>()
   const [searchHistory, setSearchHistory] = useState<Array<{ city: string, country: string, time: string }>>([])
   const [error, setError] = useState(null)
+  const [isSearching, setIsSearching] = useState(false);
 
   const handleSearch = async (city: string, country: string) => {
-    try {
-      const { data } = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_KEY}&units=metric`);
-      const timezoneDate = await useGetTimezoneDate(data.timezone);
-      const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-      const newSearchEntry = {
-        city: data.name,
-        country: data.sys.country,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }),
-      };
-      searchHistory.unshift(newSearchEntry);
-      if (searchHistory.length > 20) {
-        searchHistory.pop();
+    if (!isSearching) {
+      setIsSearching(true);
+      try {
+        const { data } = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_KEY}&units=metric`);
+        const timezoneDate = await useGetTimezoneDate(data.timezone);
+        const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+        const newSearchEntry = {
+          city: data.name,
+          country: data.sys.country,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }),
+        };
+        searchHistory.unshift(newSearchEntry);
+        if (searchHistory.length > 20) {
+          searchHistory.pop();
+        }
+        localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+        setData({
+          city: data.name,
+          country: data.sys.country,
+          status: data.weather[0].main,
+          description: data.weather[0].description,
+          temperatureMin: data.main.temp_min,
+          temperatureMax: data.main.temp_max,
+          humidity: data.main.humidity,
+          time: timezoneDate
+        });
+        setError(null);
+      } catch (error: any) {
+        setError(error);
       }
-      localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-      setData({
-        city: data.name,
-        country: data.sys.country,
-        status: data.weather[0].main,
-        description: data.weather[0].description,
-        temperatureMin: data.main.temp_min,
-        temperatureMax: data.main.temp_max,
-        humidity: data.main.humidity,
-        time: timezoneDate
-      });
-      setError(null)
-    } catch (error: any) {
-      setError(error);
+      setTimeout(() => setIsSearching(false), 3000);
     }
-  }
-  
+  };
+
   const handleDelete = (time: string, country: string, city: string) => {
     const history = JSON.parse(localStorage.getItem('searchHistory') || '[]')
-    const updatedHistory = history.filter((item: HistoryListItemProps) => item.time !== time && item.city === city && item.country === country)
+    const updatedHistory = history.filter((item: HistoryListItemProps) => item.time !== time)
+    console.log(time, country, city);
     localStorage.setItem('searchHistory', JSON.stringify(updatedHistory))
     setSearchHistory(updatedHistory)
   }
@@ -62,7 +68,7 @@ function App() {
     <div className="p-2 lg:p-0 lg:container lg:mx-auto">
       <p className="font-bold">Today's Weather</p>
       <Divider />
-      <FormInput handleSearch={handleSearch} />
+      <FormInput handleSearch={handleSearch} isSearching={isSearching}/>
       {data && !error &&
         <Result className="mt-10 lg:px-10" city={data?.city} country={data?.country} status={data?.status} description={data?.description} temperatureMin={data?.temperatureMin} temperatureMax={data?.temperatureMax} humidity={data?.humidity} time={data?.time} />
       }

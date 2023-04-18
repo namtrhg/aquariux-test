@@ -1,16 +1,19 @@
+import classNames from "classnames";
 import { useState } from "react";
 
 interface FormInputProps {
     handleSearch: (city: string, country: string) => void;
+    isSearching: boolean
 }
 
 export const FormInput = (props: FormInputProps) => {
+    const { handleSearch, isSearching } = props
     const [city, setCity] = useState("");
     const [country, setCountry] = useState("");
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        props.handleSearch(city, country);
+        handleSearch(city, country);
     };
 
     return (
@@ -37,7 +40,8 @@ export const FormInput = (props: FormInputProps) => {
                 <div className="space-x-2">
                     <button
                         type="submit"
-                        className="border border-gray-500 rounded-sm px-2 bg-gray-200"
+                        disabled={isSearching}
+                        className={classNames('border border-gray-500 rounded-sm px-2 bg-gray-200', isSearching ? 'cursor-not-allowed' : '')}
                     >
                         Search
                     </button>
