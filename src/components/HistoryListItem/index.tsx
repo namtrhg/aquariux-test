@@ -8,10 +8,11 @@ export interface HistoryListItemProps {
   time: string;
   onSearch: (city: string, country: string) => void;
   onDelete: (time: string, city: string, country: string) => void;
+  isSearching: boolean;
 }
 
 export const HistoryListItem = (props: HistoryListItemProps) => {
-  const { index, city, country, time, onSearch, onDelete } = props;
+  const { index, city, country, time, onSearch, onDelete, isSearching } = props;
 
   return (
     <div>
@@ -21,7 +22,11 @@ export const HistoryListItem = (props: HistoryListItemProps) => {
         </p>
         <div className="flex items-center space-x-3">
           <p className="text-xs">{time}</p>
-          <button onClick={() => onSearch(city, country)}>
+          <button
+            className={isSearching ? "cursor-not-allowed" : ""}
+            disabled={isSearching}
+            onClick={() => onSearch(city, country)}
+          >
             {
               <SearchIcon className="h-7 w-7 p-1 bg-gray-200 rounded-full flex justify-center items-center" />
             }

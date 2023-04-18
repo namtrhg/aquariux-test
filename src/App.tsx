@@ -59,7 +59,7 @@ function App() {
       } catch (error: any) {
         setError(error);
       }
-      setTimeout(() => setIsSearching(false), 3000);
+      setTimeout(() => setIsSearching(false), 2000);
     }
   };
 
@@ -105,6 +105,7 @@ function App() {
         searchHistory={searchHistory}
         onSearch={handleSearch}
         onDelete={(time, country, city) => handleDelete(time, country, city)}
+        isSearching={isSearching}
       />
     </div>
   );
