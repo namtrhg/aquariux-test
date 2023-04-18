@@ -19,7 +19,7 @@ export const HistoryListItem = (props: HistoryListItemProps) => {
             <div className="flex justify-between items-center text-sm">
                 <p>{index}.{city}, <span className="uppercase">{country}</span></p>
                 <div className="flex items-center space-x-3">
-                    <p>{time}</p>
+                    <p className='text-xs'>{time}</p>
                     <button onClick={() => onSearch(city, country)}>{<SearchIcon className='h-7 w-7 p-1 bg-gray-200 rounded-full flex justify-center items-center' />}</button>
                     <button onClick={() => onDelete(time, country, city)}>{<TrashIcon className='h-7 w-7 p-1 bg-gray-200 rounded-full flex justify-center items-center' />}</button>
                 </div>
